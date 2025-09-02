@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navigation } from "@/components/Navigation";
-import { BarChart3, Package, Plus, TrendingUp, Users, Eye } from "lucide-react";
+import { BarChart3, Package, Plus, TrendingUp, Users, Eye, Calendar } from "lucide-react";
 import heroImage from "@/assets/hero-banner.jpg";
 
 const Overview = () => {
@@ -119,6 +119,16 @@ const Overview = () => {
                   <div className="text-left">
                     <div className="font-semibold">Add New Product</div>
                     <div className="text-sm text-muted-foreground">Register a new product in your portfolio</div>
+                  </div>
+                </Button>
+              </Link>
+              
+              <Link to="/delivery" className="block">
+                <Button variant="outline" className="w-full justify-start h-auto p-4">
+                  <Calendar className="mr-3 h-5 w-5" />
+                  <div className="text-left">
+                    <div className="font-semibold">View Delivery Schedule</div>
+                    <div className="text-sm text-muted-foreground">Track feature roadmaps and delivery rates</div>
                   </div>
                 </Button>
               </Link>
