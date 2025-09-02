@@ -67,7 +67,7 @@ export const Navigation = () => {
           </div>
 
           <div className="text-sm text-muted-foreground">
-            CPO Dashboard
+            BPTO Dashboard
           </div>
         </div>
       </div>

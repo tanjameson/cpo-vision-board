@@ -53,8 +53,8 @@ const Overview = () => {
                 Welcome to ProductHub
               </h1>
               <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                Your comprehensive dashboard for managing product portfolios, tracking user satisfaction, 
-                and making data-driven decisions as Chief Product Officer.
+                Dashboard for managing product portfolios, tracking user satisfaction, 
+                and making data-driven decisions.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/products">
