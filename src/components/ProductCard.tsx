@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { ThumbsUp, ThumbsDown, MessageSquare, User, Calendar } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ThumbsUp, ThumbsDown, MessageSquare, User, Calendar, Clock, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 export interface Product {
@@ -16,12 +18,18 @@ export interface Product {
   downvotes: number;
   feedback: string[];
   status: "Active" | "Beta" | "Planned" | "Sunset";
+  deliverySchedule?: {
+    nextRelease: string;
+    features: string[];
+    estimatedDate: string;
+  };
 }
 
 interface ProductCardProps {
   product: Product;
   onVote: (id: string, type: 'upvote' | 'downvote') => void;
   onFeedback: (id: string, feedback: string) => void;
+  onUpdateDelivery?: (id: string, schedule: { nextRelease: string; features: string[]; estimatedDate: string }) => void;
 }
 
 export const ProductCard = ({ product, onVote, onFeedback }: ProductCardProps) => {

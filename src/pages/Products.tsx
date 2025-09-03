@@ -18,7 +18,12 @@ const initialProducts: Product[] = [
     upvotes: 24,
     downvotes: 3,
     feedback: ["Great insights dashboard", "Would love mobile app"],
-    status: "Active"
+    status: "Active",
+    deliverySchedule: {
+      nextRelease: "v2.1.0",
+      features: ["Mobile app", "Advanced filtering", "Real-time alerts"],
+      estimatedDate: "2024-04-15"
+    }
   },
   {
     id: "2", 
@@ -29,7 +34,12 @@ const initialProducts: Product[] = [
     upvotes: 18,
     downvotes: 2,
     feedback: ["Love the UI/UX", "Fast and reliable"],
-    status: "Active"
+    status: "Active",
+    deliverySchedule: {
+      nextRelease: "v1.5.0",
+      features: ["Biometric login", "Investment tracking", "Bill pay automation"],
+      estimatedDate: "2024-05-01"
+    }
   },
   {
     id: "3",
@@ -70,6 +80,14 @@ const Products = () => {
     setProducts(prev => prev.map(product =>
       product.id === id
         ? { ...product, feedback: [...product.feedback, feedback] }
+        : product
+    ));
+  };
+
+  const handleDeliveryUpdate = (id: string, schedule: { nextRelease: string; features: string[]; estimatedDate: string }) => {
+    setProducts(prev => prev.map(product =>
+      product.id === id
+        ? { ...product, deliverySchedule: schedule }
         : product
     ));
   };
@@ -148,6 +166,7 @@ const Products = () => {
               product={product}
               onVote={handleVote}
               onFeedback={handleFeedback}
+              onUpdateDelivery={handleDeliveryUpdate}
             />
           ))}
         </div>
