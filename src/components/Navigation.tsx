@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { BarChart3, Package, Home, Calendar } from "lucide-react";
+import { BarChart3, Package, Home, Calendar, MessageSquare, Truck } from "lucide-react";
 
 export const Navigation = () => {
   const location = useLocation();
@@ -14,17 +14,27 @@ export const Navigation = () => {
     {
       to: "/products",
       icon: Package,
-      label: "Product Portfolio",
+      label: "Products",
     },
     {
       to: "/delivery",
-      icon: Calendar,
+      icon: Truck,
       label: "Delivery Schedule",
+    },
+    {
+      to: "/delivery-management",
+      icon: Calendar,
+      label: "Delivery Management",
+    },
+    {
+      to: "/feedback",
+      icon: MessageSquare,
+      label: "Feedback",
     },
     {
       to: "/analytics",
       icon: BarChart3,
-      label: "Analytics Dashboard",
+      label: "Analytics",
     },
   ];
 

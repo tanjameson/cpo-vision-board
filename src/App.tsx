@@ -7,6 +7,8 @@ import Overview from "./pages/Overview";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import DeliverySchedule from "./pages/DeliverySchedule";
+import DeliveryManagement from "./pages/DeliveryManagement";
+import FeedbackManagement from "./pages/FeedbackManagement";
 import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +25,8 @@ const App = () => (
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/delivery" element={<DeliverySchedule />} />
+          <Route path="/delivery-management" element={<DeliveryManagement />} />
+          <Route path="/feedback" element={<FeedbackManagement />} />
           <Route path="/analytics" element={<Analytics />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
