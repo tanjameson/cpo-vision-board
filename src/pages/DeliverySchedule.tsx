@@ -325,29 +325,21 @@ const DeliverySchedule = () => {
                         width={140}
                       />
                       <Tooltip 
-                        formatter={(value, name, props) => [
-                          `${value} days`,
-                          `Duration`
-                        ]}
-                        labelFormatter={(label, payload) => {
-                          if (payload && payload[0]) {
+                        content={({ active, payload, label }) => {
+                          if (active && payload && payload[0]) {
                             const data = payload[0].payload;
                             return (
-                              <div className="space-y-1">
-                                <div className="font-medium">{data.fullName}</div>
-                                <div className="text-sm text-muted-foreground">Status: {data.status}</div>
-                                <div className="text-sm text-muted-foreground">Priority: {data.priority}</div>
-                                <div className="text-sm text-muted-foreground">Target: {new Date(data.targetDate).toLocaleDateString()}</div>
-                                <div className="text-sm text-muted-foreground">Progress: {data.progress}%</div>
+                              <div className="bg-card border border-card-border rounded-lg p-3 shadow-lg">
+                                <p className="font-medium text-card-foreground mb-2">{data.fullName}</p>
+                                <p className="text-sm text-muted-foreground">Status: {data.status}</p>
+                                <p className="text-sm text-muted-foreground">Priority: {data.priority}</p>
+                                <p className="text-sm text-muted-foreground">Target: {new Date(data.targetDate).toLocaleDateString()}</p>
+                                <p className="text-sm text-muted-foreground">Progress: {data.progress}%</p>
+                                <p className="text-sm text-muted-foreground">Duration: {payload[0].value} days</p>
                               </div>
                             );
                           }
-                          return label;
-                        }}
-                        contentStyle={{ 
-                          backgroundColor: 'hsl(var(--card))', 
-                          border: '1px solid hsl(var(--border))',
-                          borderRadius: '8px'
+                          return null;
                         }}
                       />
                       <Bar dataKey="duration" radius={4}>
