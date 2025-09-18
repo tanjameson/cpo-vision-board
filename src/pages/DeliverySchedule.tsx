@@ -117,23 +117,26 @@ const DeliverySchedule = () => {
   // Prepare timeline chart data
   const timelineData = upcomingFeatures
     .filter(feature => feature.product === timelineProduct)
-    .map(feature => {
-      const startDate = new Date();
-      const endDate = new Date(feature.targetDate);
-      const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-      const daysFromStart = Math.max(0, Math.ceil((startDate.getTime() - new Date('2024-07-01').getTime()) / (1000 * 60 * 60 * 24)));
+    .map((feature, index) => {
+      // Create a proper timeline with start positions and durations
+      const baseDate = new Date('2024-07-01');
+      const targetDate = new Date(feature.targetDate);
+      const startOffset = index * 20; // Stagger start dates for visibility
+      const duration = 60; // Fixed duration for visibility
       
       return {
-        name: feature.feature.length > 25 ? feature.feature.substring(0, 25) + '...' : feature.feature,
+        name: feature.feature.length > 30 ? feature.feature.substring(0, 30) + '...' : feature.feature,
         fullName: feature.feature,
-        start: daysFromStart,
-        duration: Math.max(duration, 30),
+        start: startOffset,
+        duration: duration,
         progress: feature.progress,
         status: feature.status,
         targetDate: feature.targetDate,
         priority: feature.priority
       };
     });
+
+  console.log('Timeline data for', timelineProduct, ':', timelineData);
 
   const getStatusBarColor = (status: string) => {
     switch (status) {
@@ -306,17 +309,17 @@ const DeliverySchedule = () => {
                       margin={{ top: 20, right: 30, left: 150, bottom: 5 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis 
-                        type="number"
-                        domain={[0, 150]}
-                        tickFormatter={(value) => {
-                          const date = new Date('2024-07-01');
-                          date.setDate(date.getDate() + value);
-                          return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                        }}
-                        stroke="hsl(var(--muted-foreground))"
-                        fontSize={12}
-                      />
+                       <XAxis 
+                         type="number"
+                         domain={[0, 200]}
+                         tickFormatter={(value) => {
+                           const date = new Date('2024-07-01');
+                           date.setDate(date.getDate() + value);
+                           return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                         }}
+                         stroke="hsl(var(--muted-foreground))"
+                         fontSize={12}
+                       />
                       <YAxis 
                         type="category"
                         dataKey="name"
