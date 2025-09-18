@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Cell } from 'recharts';
 import { Calendar, Clock, TrendingUp, CheckCircle, AlertCircle, Package2 } from "lucide-react";
 
 // Mock delivery data
@@ -86,6 +86,7 @@ const upcomingFeatures = [
 const DeliverySchedule = () => {
   const [selectedQuarter, setSelectedQuarter] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState('All');
+  const [timelineProduct, setTimelineProduct] = useState('Customer Analytics Platform');
 
   const filteredFeatures = upcomingFeatures.filter(feature => {
     const quarterMatch = selectedQuarter === 'All' || feature.quarter === selectedQuarter;
@@ -110,6 +111,37 @@ const DeliverySchedule = () => {
       case 'Medium': return 'secondary';
       case 'Low': return 'outline';
       default: return 'outline';
+    }
+  };
+
+  // Prepare timeline chart data
+  const timelineData = upcomingFeatures
+    .filter(feature => feature.product === timelineProduct)
+    .map(feature => {
+      const startDate = new Date();
+      const endDate = new Date(feature.targetDate);
+      const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      const daysFromStart = Math.max(0, Math.ceil((startDate.getTime() - new Date('2024-07-01').getTime()) / (1000 * 60 * 60 * 24)));
+      
+      return {
+        name: feature.feature.length > 25 ? feature.feature.substring(0, 25) + '...' : feature.feature,
+        fullName: feature.feature,
+        start: daysFromStart,
+        duration: Math.max(duration, 30),
+        progress: feature.progress,
+        status: feature.status,
+        targetDate: feature.targetDate,
+        priority: feature.priority
+      };
+    });
+
+  const getStatusBarColor = (status: string) => {
+    switch (status) {
+      case 'Testing': return 'hsl(var(--warning))';
+      case 'In Development': return 'hsl(var(--primary))';
+      case 'Design': return 'hsl(var(--accent))';
+      case 'Planning': return 'hsl(var(--secondary))';
+      default: return 'hsl(var(--muted))';
     }
   };
 
@@ -246,93 +278,104 @@ const DeliverySchedule = () => {
           </TabsContent>
 
           <TabsContent value="timeline" className="space-y-6">
+            {/* Product Filter for Timeline */}
+            <div className="flex justify-start">
+              <Select value={timelineProduct} onValueChange={setTimelineProduct}>
+                <SelectTrigger className="w-[300px] bg-card border-card-border">
+                  <SelectValue placeholder="Select product for timeline" />
+                </SelectTrigger>
+                <SelectContent className="bg-card border-card-border z-50">
+                  <SelectItem value="Customer Analytics Platform">Customer Analytics Platform</SelectItem>
+                  <SelectItem value="Mobile Banking App">Mobile Banking App</SelectItem>
+                  <SelectItem value="AI Content Generator">AI Content Generator</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <Card className="shadow-card border-card-border">
               <CardHeader>
-                <CardTitle className="text-card-foreground">Feature Delivery Timeline</CardTitle>
-                <CardDescription>Visual timeline of upcoming feature releases</CardDescription>
+                <CardTitle className="text-card-foreground">Feature Timeline - {timelineProduct}</CardTitle>
+                <CardDescription>Gantt chart showing feature development timeline</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
-                  {/* Timeline visualization */}
-                  <div className="relative">
-                    {/* Timeline line */}
-                    <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-border"></div>
-                    
-                    <div className="space-y-8">
-                      {upcomingFeatures
-                        .sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime())
-                        .map((feature, index) => (
-                        <div key={feature.id} className="relative flex items-start gap-6">
-                          {/* Timeline dot */}
-                          <div className="relative flex-shrink-0">
-                            <div className={`w-4 h-4 rounded-full border-2 bg-background ${
-                              feature.status === 'Testing' ? 'border-warning' :
-                              feature.status === 'In Development' ? 'border-primary' :
-                              feature.status === 'Design' ? 'border-accent' :
-                              'border-secondary'
-                            }`}></div>
-                            {/* Progress ring */}
-                            <div className="absolute inset-0 w-4 h-4">
-                              <svg className="w-4 h-4 transform -rotate-90" viewBox="0 0 16 16">
-                                <circle
-                                  cx="8"
-                                  cy="8"
-                                  r="6"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="1"
-                                  strokeDasharray={`${(feature.progress / 100) * 37.7} 37.7`}
-                                  className={
-                                    feature.status === 'Testing' ? 'text-warning' :
-                                    feature.status === 'In Development' ? 'text-primary' :
-                                    feature.status === 'Design' ? 'text-accent' :
-                                    'text-secondary'
-                                  }
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                          
-                          {/* Feature card */}
-                          <div className="flex-1 min-w-0">
-                            <Card className="shadow-sm border-card-border">
-                              <CardHeader className="pb-3">
-                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                                  <div className="space-y-1">
-                                    <div className="flex items-center gap-2">
-                                      <h4 className="text-sm font-semibold text-card-foreground">{feature.feature}</h4>
-                                      <Badge variant={getPriorityColor(feature.priority)} className="text-xs">
-                                        {feature.priority}
-                                      </Badge>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground">{feature.product}</p>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <div className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(feature.status)}`}>
-                                      {feature.status}
-                                    </div>
-                                    <div className="text-xs text-muted-foreground flex items-center gap-1">
-                                      <Calendar className="h-3 w-3" />
-                                      {new Date(feature.targetDate).toLocaleDateString()}
-                                    </div>
-                                  </div>
-                                </div>
-                              </CardHeader>
-                              <CardContent className="pt-0">
-                                <p className="text-xs text-muted-foreground mb-3">{feature.description}</p>
-                                <div className="space-y-2">
-                                  <div className="flex justify-between text-xs">
-                                    <span className="text-muted-foreground">Progress</span>
-                                    <span className="font-medium text-card-foreground">{feature.progress}%</span>
-                                  </div>
-                                  <Progress value={feature.progress} className="h-1.5" />
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                <div className="h-[400px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={timelineData}
+                      layout="horizontal"
+                      margin={{ top: 20, right: 30, left: 150, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis 
+                        type="number"
+                        domain={[0, 150]}
+                        tickFormatter={(value) => {
+                          const date = new Date('2024-07-01');
+                          date.setDate(date.getDate() + value);
+                          return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                        }}
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                      />
+                      <YAxis 
+                        type="category"
+                        dataKey="name"
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        width={140}
+                      />
+                      <Tooltip 
+                        formatter={(value, name, props) => [
+                          `${value} days`,
+                          `Duration`
+                        ]}
+                        labelFormatter={(label, payload) => {
+                          if (payload && payload[0]) {
+                            const data = payload[0].payload;
+                            return (
+                              <div className="space-y-1">
+                                <div className="font-medium">{data.fullName}</div>
+                                <div className="text-sm text-muted-foreground">Status: {data.status}</div>
+                                <div className="text-sm text-muted-foreground">Priority: {data.priority}</div>
+                                <div className="text-sm text-muted-foreground">Target: {new Date(data.targetDate).toLocaleDateString()}</div>
+                                <div className="text-sm text-muted-foreground">Progress: {data.progress}%</div>
+                              </div>
+                            );
+                          }
+                          return label;
+                        }}
+                        contentStyle={{ 
+                          backgroundColor: 'hsl(var(--card))', 
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px'
+                        }}
+                      />
+                      <Bar dataKey="duration" radius={4}>
+                        {timelineData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={getStatusBarColor(entry.status)} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+                
+                {/* Legend */}
+                <div className="flex flex-wrap gap-4 mt-4 justify-center">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded bg-primary"></div>
+                    <span className="text-xs text-muted-foreground">In Development</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded bg-warning"></div>
+                    <span className="text-xs text-muted-foreground">Testing</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded bg-accent"></div>
+                    <span className="text-xs text-muted-foreground">Design</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded bg-secondary"></div>
+                    <span className="text-xs text-muted-foreground">Planning</span>
                   </div>
                 </div>
               </CardContent>
