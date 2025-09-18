@@ -160,8 +160,9 @@ const DeliverySchedule = () => {
         </div>
 
         <Tabs defaultValue="roadmap" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="roadmap">Feature Roadmap</TabsTrigger>
+            <TabsTrigger value="timeline">Timeline Chart</TabsTrigger>
             <TabsTrigger value="metrics">Delivery Metrics</TabsTrigger>
           </TabsList>
 
@@ -242,6 +243,100 @@ const DeliverySchedule = () => {
                 </Card>
               ))}
             </div>
+          </TabsContent>
+
+          <TabsContent value="timeline" className="space-y-6">
+            <Card className="shadow-card border-card-border">
+              <CardHeader>
+                <CardTitle className="text-card-foreground">Feature Delivery Timeline</CardTitle>
+                <CardDescription>Visual timeline of upcoming feature releases</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Timeline visualization */}
+                  <div className="relative">
+                    {/* Timeline line */}
+                    <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-border"></div>
+                    
+                    <div className="space-y-8">
+                      {upcomingFeatures
+                        .sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime())
+                        .map((feature, index) => (
+                        <div key={feature.id} className="relative flex items-start gap-6">
+                          {/* Timeline dot */}
+                          <div className="relative flex-shrink-0">
+                            <div className={`w-4 h-4 rounded-full border-2 bg-background ${
+                              feature.status === 'Testing' ? 'border-warning' :
+                              feature.status === 'In Development' ? 'border-primary' :
+                              feature.status === 'Design' ? 'border-accent' :
+                              'border-secondary'
+                            }`}></div>
+                            {/* Progress ring */}
+                            <div className="absolute inset-0 w-4 h-4">
+                              <svg className="w-4 h-4 transform -rotate-90" viewBox="0 0 16 16">
+                                <circle
+                                  cx="8"
+                                  cy="8"
+                                  r="6"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="1"
+                                  strokeDasharray={`${(feature.progress / 100) * 37.7} 37.7`}
+                                  className={
+                                    feature.status === 'Testing' ? 'text-warning' :
+                                    feature.status === 'In Development' ? 'text-primary' :
+                                    feature.status === 'Design' ? 'text-accent' :
+                                    'text-secondary'
+                                  }
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                          
+                          {/* Feature card */}
+                          <div className="flex-1 min-w-0">
+                            <Card className="shadow-sm border-card-border">
+                              <CardHeader className="pb-3">
+                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                                  <div className="space-y-1">
+                                    <div className="flex items-center gap-2">
+                                      <h4 className="text-sm font-semibold text-card-foreground">{feature.feature}</h4>
+                                      <Badge variant={getPriorityColor(feature.priority)} className="text-xs">
+                                        {feature.priority}
+                                      </Badge>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">{feature.product}</p>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <div className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(feature.status)}`}>
+                                      {feature.status}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground flex items-center gap-1">
+                                      <Calendar className="h-3 w-3" />
+                                      {new Date(feature.targetDate).toLocaleDateString()}
+                                    </div>
+                                  </div>
+                                </div>
+                              </CardHeader>
+                              <CardContent className="pt-0">
+                                <p className="text-xs text-muted-foreground mb-3">{feature.description}</p>
+                                <div className="space-y-2">
+                                  <div className="flex justify-between text-xs">
+                                    <span className="text-muted-foreground">Progress</span>
+                                    <span className="font-medium text-card-foreground">{feature.progress}%</span>
+                                  </div>
+                                  <Progress value={feature.progress} className="h-1.5" />
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="metrics" className="space-y-6">
