@@ -80,10 +80,6 @@ export const Navigation = () => {
               );
             })}
           </div>
-
-          <div className="text-sm text-muted-foreground">
-            BPTO Dashboard
-          </div>
         </div>
       </div>
     </nav>
