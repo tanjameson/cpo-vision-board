@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { ThumbsUp, ThumbsDown, MessageSquare, User, Calendar, Clock, Eye } from "lucide-react";
+import { ThumbsUp, ThumbsDown, MessageSquare, User, Calendar, GitBranch, FileText, Code, Megaphone, BarChart3, Activity, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 export interface Product {
@@ -22,6 +22,14 @@ export interface Product {
     nextRelease: string;
     features: string[];
     estimatedDate: string;
+  };
+  links?: {
+    gitRepo?: string;
+    releaseNotes?: string;
+    internalDev?: string;
+    marketing?: string;
+    analytics?: string;
+    healthDashboard?: string;
   };
 }
 
@@ -112,6 +120,98 @@ export const ProductCard = ({ product, onVote, onFeedback }: ProductCardProps) =
               >
                 Cancel
               </Button>
+            </div>
+          </div>
+        )}
+        {/* Quick Links Section */}
+        {product.links && (
+          <div className="mt-6 pt-4 border-t border-card-border">
+            <h4 className="text-sm font-medium text-card-foreground mb-3">Quick Links</h4>
+            <div className="grid grid-cols-2 gap-2">
+              {product.links.gitRepo && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  className="justify-start text-xs"
+                >
+                  <a href={product.links.gitRepo} target="_blank" rel="noopener noreferrer">
+                    <GitBranch className="h-3.5 w-3.5 mr-2" />
+                    Git Repo
+                    <ExternalLink className="h-3 w-3 ml-auto" />
+                  </a>
+                </Button>
+              )}
+              {product.links.releaseNotes && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  className="justify-start text-xs"
+                >
+                  <a href={product.links.releaseNotes} target="_blank" rel="noopener noreferrer">
+                    <FileText className="h-3.5 w-3.5 mr-2" />
+                    Release Notes
+                    <ExternalLink className="h-3 w-3 ml-auto" />
+                  </a>
+                </Button>
+              )}
+              {product.links.internalDev && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  className="justify-start text-xs"
+                >
+                  <a href={product.links.internalDev} target="_blank" rel="noopener noreferrer">
+                    <Code className="h-3.5 w-3.5 mr-2" />
+                    Internal Dev
+                    <ExternalLink className="h-3 w-3 ml-auto" />
+                  </a>
+                </Button>
+              )}
+              {product.links.marketing && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  className="justify-start text-xs"
+                >
+                  <a href={product.links.marketing} target="_blank" rel="noopener noreferrer">
+                    <Megaphone className="h-3.5 w-3.5 mr-2" />
+                    Marketing
+                    <ExternalLink className="h-3 w-3 ml-auto" />
+                  </a>
+                </Button>
+              )}
+              {product.links.analytics && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  className="justify-start text-xs"
+                >
+                  <a href={product.links.analytics} target="_blank" rel="noopener noreferrer">
+                    <BarChart3 className="h-3.5 w-3.5 mr-2" />
+                    Analytics
+                    <ExternalLink className="h-3 w-3 ml-auto" />
+                  </a>
+                </Button>
+              )}
+              {product.links.healthDashboard && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  className="justify-start text-xs"
+                >
+                  <a href={product.links.healthDashboard} target="_blank" rel="noopener noreferrer">
+                    <Activity className="h-3.5 w-3.5 mr-2" />
+                    Health Dashboard
+                    <ExternalLink className="h-3 w-3 ml-auto" />
+                  </a>
+                </Button>
+              )}
             </div>
           </div>
         )}

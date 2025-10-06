@@ -23,6 +23,14 @@ const initialProducts: Product[] = [
       nextRelease: "v2.1.0",
       features: ["Mobile app", "Advanced filtering", "Real-time alerts"],
       estimatedDate: "2024-04-15"
+    },
+    links: {
+      gitRepo: "https://gitlab.com/analytics-platform",
+      releaseNotes: "https://docs.example.com/analytics/releases",
+      internalDev: "https://dev.example.com/analytics",
+      marketing: "https://marketing.example.com/analytics",
+      analytics: "https://analytics.example.com/dashboard",
+      healthDashboard: "https://health.example.com/analytics"
     }
   },
   {
@@ -39,6 +47,12 @@ const initialProducts: Product[] = [
       nextRelease: "v1.5.0",
       features: ["Biometric login", "Investment tracking", "Bill pay automation"],
       estimatedDate: "2024-05-01"
+    },
+    links: {
+      gitRepo: "https://gitlab.com/mobile-banking",
+      releaseNotes: "https://docs.example.com/banking/releases",
+      analytics: "https://analytics.example.com/banking",
+      healthDashboard: "https://health.example.com/banking"
     }
   },
   {
@@ -50,7 +64,12 @@ const initialProducts: Product[] = [
     upvotes: 12,
     downvotes: 5,
     feedback: ["Still needs refinement", "Good concept"],
-    status: "Beta"
+    status: "Beta",
+    links: {
+      gitRepo: "https://gitlab.com/ai-content-gen",
+      releaseNotes: "https://docs.example.com/ai-gen/releases",
+      internalDev: "https://dev.example.com/ai-gen"
+    }
   }
 ];
 
