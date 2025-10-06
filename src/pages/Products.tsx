@@ -5,6 +5,7 @@ import { ProductCard, Product } from "@/components/ProductCard";
 import { AddProductForm } from "@/components/AddProductForm";
 import { Navigation } from "@/components/Navigation";
 import { Plus, Search } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import heroImage from "@/assets/hero-banner.jpg";
 
 // Mock data for initial products
@@ -19,6 +20,7 @@ const initialProducts: Product[] = [
     downvotes: 3,
     feedback: ["Great insights dashboard", "Would love mobile app"],
     status: "Active",
+    tier: "Tier 1",
     deliverySchedule: {
       nextRelease: "v2.1.0",
       features: ["Mobile app", "Advanced filtering", "Real-time alerts"],
@@ -43,6 +45,7 @@ const initialProducts: Product[] = [
     downvotes: 2,
     feedback: ["Love the UI/UX", "Fast and reliable"],
     status: "Active",
+    tier: "Tier 2",
     deliverySchedule: {
       nextRelease: "v1.5.0",
       features: ["Biometric login", "Investment tracking", "Bill pay automation"],
@@ -65,6 +68,7 @@ const initialProducts: Product[] = [
     downvotes: 5,
     feedback: ["Still needs refinement", "Good concept"],
     status: "Beta",
+    tier: "Tier 2",
     links: {
       gitRepo: "https://gitlab.com/ai-content-gen",
       releaseNotes: "https://docs.example.com/ai-gen/releases",
@@ -83,6 +87,12 @@ const Products = () => {
     product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.pmName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Calculate statistics
+  const totalProducts = products.length;
+  const generallyAvailable = products.filter(p => p.status === "Active").length;
+  const inBeta = products.filter(p => p.status === "Beta").length;
+  const earlyStage = products.filter(p => p.status === "Planned").length;
 
   const handleVote = (id: string, type: 'upvote' | 'downvote') => {
     setProducts(prev => prev.map(product => 
@@ -146,6 +156,34 @@ const Products = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <Card className="border-card-border">
+            <CardContent className="pt-6">
+              <div className="text-3xl font-bold text-card-foreground mb-1">{totalProducts}</div>
+              <div className="text-sm text-muted-foreground">Total Products</div>
+            </CardContent>
+          </Card>
+          <Card className="border-card-border">
+            <CardContent className="pt-6">
+              <div className="text-3xl font-bold text-success mb-1">{generallyAvailable}</div>
+              <div className="text-sm text-muted-foreground">Generally Available</div>
+            </CardContent>
+          </Card>
+          <Card className="border-card-border">
+            <CardContent className="pt-6">
+              <div className="text-3xl font-bold text-primary mb-1">{inBeta}</div>
+              <div className="text-sm text-muted-foreground">In Beta</div>
+            </CardContent>
+          </Card>
+          <Card className="border-card-border">
+            <CardContent className="pt-6">
+              <div className="text-3xl font-bold text-warning mb-1">{earlyStage}</div>
+              <div className="text-sm text-muted-foreground">Early Stage</div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Controls Section */}
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-8">
           <div className="relative flex-1 max-w-md">

@@ -19,6 +19,7 @@ export interface Product {
   downvotes: number;
   feedback: string[];
   status: "Active" | "Beta" | "Planned" | "Sunset";
+  tier?: "Tier 1" | "Tier 2";
   deliverySchedule?: {
     nextRelease: string;
     features: string[];
@@ -79,9 +80,16 @@ export const ProductCard = ({ product, onVote, onFeedback }: ProductCardProps) =
               {product.description}
             </CardDescription>
           </div>
-          <Badge variant={getStatusVariant(product.status)}>
-            {product.status}
-          </Badge>
+          <div className="flex gap-2">
+            <Badge variant={getStatusVariant(product.status)}>
+              {product.status}
+            </Badge>
+            {product.tier && (
+              <Badge variant="outline" className="border-warning text-warning">
+                {product.tier}
+              </Badge>
+            )}
+          </div>
         </div>
       </CardHeader>
       
